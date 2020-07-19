@@ -14,8 +14,12 @@
         <br>
         <header><a href="/">home</a> | <a href="/login">login</a> | <a href="/create">create</a></header>
         <hr>
-
         <div>
+            @if (auth()->check())
+            Hello, {{auth()->user()->name}} <a href="/logout">logout</a>
+            @else
+            Hello, please <a href="/login">login</a>
+            @endif
             @yield("content")
         </div>
         <hr>
