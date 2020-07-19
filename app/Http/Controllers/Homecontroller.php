@@ -2,29 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\category;
+use App\post;
 use Illuminate\Http\Request;
 
 class Homecontroller extends Controller
 {
-    public function index(){
-        return view('home');
+    public function index()
+    {
+        $posts = Post::paginate(5);
+        $data = [
+            'posts' => $posts
+        ];
+
+        return view('home', $data);
     }
 
-    public function contact(){
-        return view('contact');
+    public function create()
+    {
+        $categories = category::all();
+        $data = [
+            'categories' => $categories
+        ];
+        return view('create', $data);
     }
 
-    public function about(){
-        return view('about');
+    public function login()
+    {
+        return view('login');
     }
 
-    public function show($id){}
+    public function store(Request $request)
+    {
+        $detail = $request->input('detail');
+        $category_id = $request->input('category_id');
+        $post = new Post();
+        $post->user_id = 1;
+        $post->status = 0;
+        $post->detail = $detail;
+        $post->category_id = $category_id;
+        $post->save();
 
-    public function create(){}
+        return redirect('/');
+    }
 
-    public function store(){}
+    public function delete($id)
+    {
+        if($id == ""){
+            return redirect('/');
+        }
 
-    public function update($id){}
+        $post = Post::find($id);
+        $post->delete();
 
-    public function delete($id){}
+        return redirect('/');
+    }
+
+    // public function show($id){}
+
+    // public function create(){}
+
+    // public function update($id){}
+
 }
